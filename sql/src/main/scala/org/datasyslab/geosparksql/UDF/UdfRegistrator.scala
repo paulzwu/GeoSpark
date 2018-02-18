@@ -52,6 +52,8 @@ object UdfRegistrator {
   {
     sparkSession.sessionState.functionRegistry.registerFunction("ST_Distance", ST_Distance)
     sparkSession.sessionState.functionRegistry.registerFunction("ST_ConvexHull", ST_ConvexHull)
+    sparkSession.sessionState.functionRegistry.registerFunction("ST_OTPConcaveHull", ST_OTPConcaveHull)
+    sparkSession.sessionState.functionRegistry.registerFunction("ST_KNNConcaveHull", ST_KNNConcaveHull)
     sparkSession.sessionState.functionRegistry.registerFunction("ST_Envelope", ST_Envelope)
     sparkSession.sessionState.functionRegistry.registerFunction("ST_Length", ST_Length)
     sparkSession.sessionState.functionRegistry.registerFunction("ST_Area", ST_Area)
@@ -64,6 +66,7 @@ object UdfRegistrator {
   {
     sparkSession.udf.register("ST_Envelope_Aggr", new ST_Envelope_Aggr)
     sparkSession.udf.register("ST_Union_Aggr", new ST_Union_Aggr)
+    sparkSession.udf.register("ST_Union_PointAggr", new ST_Union_PointAggr)
   }
 
   def dropConstructors(sparkSession: SparkSession): Unit =
@@ -89,6 +92,8 @@ object UdfRegistrator {
   {
     sparkSession.sessionState.functionRegistry.dropFunction("ST_Distance")
     sparkSession.sessionState.functionRegistry.dropFunction("ST_ConvexHull")
+    sparkSession.sessionState.functionRegistry.dropFunction("ST_OPTConcaveHull")
+    sparkSession.sessionState.functionRegistry.dropFunction("ST_KNNConcaveHull")
     sparkSession.sessionState.functionRegistry.dropFunction("ST_Envelope")
     sparkSession.sessionState.functionRegistry.dropFunction("ST_Length")
     sparkSession.sessionState.functionRegistry.dropFunction("ST_Area")
@@ -101,6 +106,7 @@ object UdfRegistrator {
   {
     sparkSession.sessionState.functionRegistry.dropFunction("ST_Envelope_Aggr")
     sparkSession.sessionState.functionRegistry.dropFunction("ST_Union_Aggr")
+    sparkSession.sessionState.functionRegistry.dropFunction("ST_Union_PointAggr")
   }
 
   def registerAll(sqlContext: SQLContext): Unit =

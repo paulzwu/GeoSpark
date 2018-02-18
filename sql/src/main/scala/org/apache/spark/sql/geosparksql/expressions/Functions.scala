@@ -33,9 +33,13 @@ import org.apache.spark.sql.geosparksql.UDT.GeometryUDT
 import org.apache.spark.sql.types.{DataType, DoubleType}
 import org.apache.spark.unsafe.types.UTF8String
 import org.datasyslab.geosparksql.utils.GeometrySerializer
+import org.datasyslab.geospark.spatialRddTool.OTPConcaveHull
+import org.datasyslab.geospark.spatialRddTool.KNNConcaveHull
 import org.geotools.geometry.jts.JTS
+//import com.vividsolutions.jts.geom.{Polygon,LineString}
 import org.geotools.referencing.CRS
 import org.opengis.referencing.operation.MathTransform
+ 
 
 /**
   * Return the distance between two geometries.
@@ -82,6 +86,55 @@ case class ST_ConvexHull(inputExpressions: Seq[Expression])
     assert(inputExpressions.length==1)
     val geometry = GeometrySerializer.deserialize(inputExpressions(0).eval(input).asInstanceOf[ArrayData])
     new GenericArrayData(GeometrySerializer.serialize(geometry.convexHull()))
+  }
+
+  override def dataType: DataType = new GeometryUDT()
+
+  override def children: Seq[Expression] = inputExpressions
+}
+
+/**
+  * Return the concave hull of a Geometry using KNN algorithm
+  * 
+  * @param inputExpressions
+  */
+case class ST_KNNConcaveHull(inputExpressions: Seq[Expression])
+  extends Expression with CodegenFallback
+{
+  override def nullable: Boolean = false
+
+  override def eval(input: InternalRow): Any =
+  {
+    assert(inputExpressions.length==1)
+    val geometry = GeometrySerializer.deserialize(inputExpressions(0).eval(input).asInstanceOf[ArrayData])
+     //new GenericArrayData(GeometrySerializer.serialize(geometry.convexHull()))
+    new GenericArrayData(GeometrySerializer.serialize(new KNNConcaveHull().getKnerConcaveHull(geometry,KNNConcaveHull.k)))
+  }
+  override def dataType: DataType = new GeometryUDT()
+
+  override def children: Seq[Expression] = inputExpressions
+}
+
+ /**
+  * Return the concave hull of a Geometry using the Duckham and al. (2008) algorithm defined in the paper 
+  * untitled "Efficient generation of simple polygons for characterizing the shape of a set of points in the plane"
+  * implemented by Eric Grosso fro OpenTripPlanner
+  * 
+  * @param inputExpressions
+  */
+  case class ST_OTPConcaveHull(inputExpressions: Seq[Expression])
+  extends Expression with CodegenFallback
+{
+  override def nullable: Boolean = false
+
+  override def eval(input: InternalRow): Any =
+  {
+    assert(inputExpressions.length==1)
+    val geometry = GeometrySerializer.deserialize(inputExpressions(0).eval(input).asInstanceOf[ArrayData])
+    //new GenericArrayData(GeometrySerializer.serialize(geometry.convexHull()))
+    val lineString = new OTPConcaveHull(geometry, OTPConcaveHull.alpha).getConcaveHull
+    //val polygon = new Polygon(lineString, null, KNNConcaveHull.GEOMETRY_FACTORY)
+    new GenericArrayData(GeometrySerializer.serialize(lineString))
   }
 
   override def dataType: DataType = new GeometryUDT()
