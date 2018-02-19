@@ -33,8 +33,8 @@ import org.apache.spark.sql.geosparksql.UDT.GeometryUDT
 import org.apache.spark.sql.types.{DataType, DoubleType}
 import org.apache.spark.unsafe.types.UTF8String
 import org.datasyslab.geosparksql.utils.GeometrySerializer
-import org.datasyslab.geospark.spatialRddTool.OTPConcaveHull
-import org.datasyslab.geospark.spatialRddTool.KNNConcaveHull
+import org.datasyslab.geospark.geometryObjects.OTPConcaveHull
+import org.datasyslab.geospark.geometryObjects.KNNConcaveHull
 import org.geotools.geometry.jts.JTS
 //import com.vividsolutions.jts.geom.{Polygon,LineString}
 import org.geotools.referencing.CRS

@@ -1,4 +1,4 @@
-package org.datasyslab.geospark.spatialRddTool;
+package org.datasyslab.geospark.geometryObjects;
 
 import java.util.ArrayList;
 import java.util.Collections;

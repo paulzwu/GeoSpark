@@ -1,4 +1,4 @@
-package org.datasyslab.geospark.spatialRddTool;
+package org.datasyslab.geospark.geometryObjects;
 
 /*
  * This file is part of the OpenSphere project which aims to
