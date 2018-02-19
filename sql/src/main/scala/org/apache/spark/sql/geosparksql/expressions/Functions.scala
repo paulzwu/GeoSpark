@@ -107,8 +107,7 @@ case class ST_KNNConcaveHull(inputExpressions: Seq[Expression])
   {
     assert(inputExpressions.length==1)
     val geometry = GeometrySerializer.deserialize(inputExpressions(0).eval(input).asInstanceOf[ArrayData])
-     //new GenericArrayData(GeometrySerializer.serialize(geometry.convexHull()))
-    new GenericArrayData(GeometrySerializer.serialize(new KNNConcaveHull().getKnerConcaveHull(geometry,KNNConcaveHull.k)))
+    new GenericArrayData(GeometrySerializer.serialize(new KNNConcaveHull().getConcaveHull(geometry,KNNConcaveHull.k)))
   }
   override def dataType: DataType = new GeometryUDT()
 
